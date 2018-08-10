@@ -15,6 +15,7 @@ namespace SpaceGame
   class Nebula : BaseObject
   {
     Point[] Dots;
+
     /// <summary>
     /// Конструктор класса Туманности
     /// </summary>
@@ -32,11 +33,11 @@ namespace SpaceGame
       }
     }
 
+    /// <summary>
+    /// Метод рисования
+    /// </summary>
     public override void Draw()
     {
-      //Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X, Pos.Y, Pos.X + Size.Width, Pos.Y + Size.Height);
-      //Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X + Size.Width, Pos.Y, Pos.X, Pos.Y + Size.Height);
-
       // Pos.X Pos.Y - центр звезды
       Game.Buffer.Graphics.FillEllipse(Brushes.DarkViolet, new Rectangle(Pos.X - Size.Width / 2, Pos.Y - Size.Height / 2, Size.Width, Size.Height));
       int[] a = { 5, 4, 3, 0 };
@@ -56,24 +57,19 @@ namespace SpaceGame
       int kh = 35;
       for (int i = 0; i < Dots.Length; i++)
       {
-        float x = Pos.X - Size.Width / 3f, 
+        float x = Pos.X - Size.Width / 3f,
           y = Pos.Y - Size.Height / 3f,
-          dx = kw * Dots[i].X / 100f, 
+          dx = kw * Dots[i].X / 100f,
           dy = kh * Dots[i].Y / 100f;
 
         Game.Buffer.Graphics.DrawLine(Pens.White, x + dx - 1, y + dy - 1, x + dx + 1, y + dy + 1);
         Game.Buffer.Graphics.DrawLine(Pens.White, x + dx - 1, y + dy + 1, x + dx + 1, y + dy - 1);
       }
-
-      //for (int i = -1; i <= 1; i++)
-      //{
-      //  for (int j = -1; j <= 1; j++)
-      //  {
-      //    Game.Buffer.Graphics.FillEllipse(Brushes.Red, new Rectangle(Pos.X - i * Size.Width / 3 - Size.Width / 8, Pos.Y - j * Size.Height / 3 - Size.Height / 4, Size.Width / 4, Size.Height / 2));
-      //  }
-      //  Game.Buffer.Graphics.FillEllipse(Brushes.White, new Rectangle(Pos.X - Size.Width / 8, Pos.Y - Size.Height / 4, Size.Width / 4, Size.Height / 2));
-      //}
     }
+
+    /// <summary>
+    /// Метод обновления
+    /// </summary>
     public override void Update()
     {
       Random rnd = new Random();

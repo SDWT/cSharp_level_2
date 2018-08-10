@@ -14,7 +14,6 @@ namespace SpaceGame
   /// </summary>
   class Star : BaseObject
   {
-
     /// <summary>
     /// Конструктор класса звезды
     /// </summary>
@@ -24,15 +23,18 @@ namespace SpaceGame
     public Star(Point pos, Point dir, Size size) : base(pos, dir, size)
     { }
 
+    /// <summary>
+    /// Метод рисования звёзд
+    /// </summary>
     public override void Draw()
     {
-      //Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X, Pos.Y, Pos.X + size.Width, Pos.Y + size.Height);
-      //Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X + size.Width, Pos.Y, Pos.X, Pos.Y + size.Height);
-
-      // Pos.X Pos.Y - центр звезды
       Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X - Size.Width / 2, Pos.Y - Size.Height / 2, Pos.X + Size.Width / 2, Pos.Y + Size.Height / 2);
       Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X + Size.Width / 2, Pos.Y - Size.Height / 2, Pos.X - Size.Width / 2, Pos.Y + Size.Height / 2);
     }
+
+    /// <summary>
+    /// Метод обновления
+    /// </summary>
     public override void Update()
     {
       Pos.X += Dir.X;
@@ -41,7 +43,7 @@ namespace SpaceGame
         Random rnd = new Random(Pos.Y);
         Pos.X = Game.Width + Size.Width;
         Pos.Y = (rnd.Next() % (Game.Height - 120)) + 60;
-        Dir.X = -5 * ((rnd.Next() % 10) + 5);
+        Dir.X = -5 * ((rnd.Next() % 10) + 1);
       }
     }
 

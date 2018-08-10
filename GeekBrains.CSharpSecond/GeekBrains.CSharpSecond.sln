@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceGame", "SpaceGame\SpaceGame.csproj", "{6C7AE389-0AEC-4F40-B001-17E80821D833}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HW2.Task1", "HW2.Task1\HW2.Task1.csproj", "{CE7A8C6E-97A5-4B9B-8AE8-AFFF7C3F6E52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6C7AE389-0AEC-4F40-B001-17E80821D833}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C7AE389-0AEC-4F40-B001-17E80821D833}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C7AE389-0AEC-4F40-B001-17E80821D833}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE7A8C6E-97A5-4B9B-8AE8-AFFF7C3F6E52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE7A8C6E-97A5-4B9B-8AE8-AFFF7C3F6E52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE7A8C6E-97A5-4B9B-8AE8-AFFF7C3F6E52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE7A8C6E-97A5-4B9B-8AE8-AFFF7C3F6E52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

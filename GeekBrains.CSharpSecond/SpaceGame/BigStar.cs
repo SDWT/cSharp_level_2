@@ -14,12 +14,20 @@ namespace SpaceGame
   /// </summary>
   class BigStar : BaseImageObject
   {
-    const int speedMax = 7;
+    private const int _speedMax = 7;
+
+    /// <summary>
+    /// Конструктор класса большой звезды по умолчанию
+    /// </summary>
+    public BigStar() : base(new Point(0, 0), new Point(0, 0), new Size(250, 250), Properties.Resources.bigStar)
+    {
+      Dir = new Point((_speedMax - (Size.Width) / 50) * -2, 0);
+    }
+
     /// <summary>
     /// Конструктор класса звезды
     /// </summary>
     /// <param name="pos">Расположение</param>
-    /// <param name="dir">Направление</param>
     /// <param name="size">Длина диаметра большорй звезды больше или равен 50, меньше или равен 250</param>
     public BigStar(Point pos, int size) : base(pos, new Point(0, 0), new Size(0, 0), Properties.Resources.bigStar)
     {
@@ -30,20 +38,24 @@ namespace SpaceGame
       else
         size = (size / 50) * 50;
 
-      this.Size = new Size(size , size);
-      Dir = new Point((speedMax - (size) / 50) * -2, 0);
+      this.Size = new Size(size, size);
+      Dir = new Point((_speedMax - (size) / 50) * -2, 0);
 
     }
 
+    /// <summary>
+    /// Метод рисования
+    /// </summary>
     public override void Draw()
     {
-      //Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X, Pos.Y, Pos.X + size.Width, Pos.Y + size.Height);
-      //Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X + size.Width, Pos.Y, Pos.X, Pos.Y + size.Height);
-
-      // Pos.X Pos.Y - центр звезды
-      Rectangle rect = new Rectangle(Pos.X - Size.Width / 2, Pos.Y - Size.Height / 2, Size.Width, Size.Height);
+      // Pos.X Pos.Y
+      Rectangle rect = new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height);
       Game.Buffer.Graphics.DrawImage(Img, rect);
     }
+
+    /// <summary>
+    /// Метод обновления
+    /// </summary>
     public override void Update()
     {
       Pos.X += Dir.X;
@@ -54,7 +66,7 @@ namespace SpaceGame
         Pos.Y = (rnd.Next() % (Game.Height - 120)) + 60;
         int newsize = ((rnd.Next() % 3) + 1) * 50;
         Size = new Size(newsize, newsize);
-        Dir.X = -2 * (speedMax - Size.Width / 50);
+        Dir.X = -2 * (_speedMax - Size.Width / 50);
       }
     }
 

@@ -18,19 +18,18 @@ namespace SpaceGame
     /// <summary>
     /// Главная точка входа для приложения.
     /// </summary>
-    [STAThread]
+    //[STAThread]
     static void Main()
     {
-      //Application.EnableVisualStyles();
-      //Application.SetCompatibleTextRenderingDefault(false);
-      Form mainForm = new Form();
-      mainForm.Width = 800;
-      mainForm.Height = 600;
-
+      Form mainForm = new Form
+      {
+        Width = Screen.PrimaryScreen.Bounds.Width,
+        Height = Screen.PrimaryScreen.Bounds.Height
+      };
       Game.Init(mainForm);
       mainForm.Show();
+      Game.Load();
       Game.Draw();
-
       Application.Run(mainForm);
     }
   }

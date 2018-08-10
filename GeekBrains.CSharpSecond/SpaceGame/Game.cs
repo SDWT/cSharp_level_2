@@ -15,16 +15,13 @@ namespace SpaceGame
   /// </summary>
   static class Game
   {
-    /// <summary>
-    /// 
-    /// </summary>
+
     private static BufferedGraphicsContext _context;
 
     /// <summary>
     /// Поле буфера кадра
     /// </summary>
     public static BufferedGraphics Buffer;
-
 
     /// <summary>
     /// Свойство Ширины игрового поля
@@ -36,10 +33,8 @@ namespace SpaceGame
     /// </summary>
     public static int Height { get; set; }
 
-    public static Rectangle RectArea { get; set; }
-
     /// <summary>
-    /// Конструктор по умалчанию
+    /// Конструктор по умолчанию
     /// </summary>
     static Game() { }
 
@@ -59,9 +54,24 @@ namespace SpaceGame
       // Запоминаем размеры формы
       Width = form.Width;
       Height = form.Height;
-      RectArea = form.ClientRectangle;
-      //Width = form.ClientSize.Width;
-      //Height = form.ClientSize.Height;
+
+      if (Width < 0)
+      {
+        throw new ArgumentOutOfRangeException("Width", Width, "Ширина не может быть меньше 0");
+      }
+      if (Height < 0)
+      {
+        throw new ArgumentOutOfRangeException("Height", Height, "Высота не может быть меньше 0");
+      }
+      if (Width > 2000)
+      {
+        throw new ArgumentOutOfRangeException("Width", Width, "Ширина не может быть больше 2000");
+      }
+      if (Height > 2000)
+      {
+        throw new ArgumentOutOfRangeException("Height", Height, "Высота не может быть больше 2000");
+      }
+
 
       // Связываем буфер в памяти с графическим объектом, чтобы рисовать в буфере
       Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
@@ -74,14 +84,8 @@ namespace SpaceGame
       timer.Interval = 100;
       timer.Start();
       timer.Tick += Timer_Tick;
-
     }
 
-    /// <summary>
-    /// Обработчик таймера
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
     private static void Timer_Tick(object sender, EventArgs e)
     {
       Draw();
@@ -93,15 +97,12 @@ namespace SpaceGame
     /// </summary>
     public static void Draw()
     {
-      // Проверяем вывод графики
-      //Buffer.Graphics.Clear(Color.Black);
-      //Buffer.Graphics.DrawRectangle(Pens.White, new Rectangle(100, 100, 200, 200));
-      //Buffer.Graphics.FillEllipse(Brushes.Wheat, new Rectangle(100, 100, 200, 200));
-      //Buffer.Render();
-
       Buffer.Graphics.Clear(Color.Black);
       foreach (BaseObject obj in _objs)
         obj.Draw();
+      foreach (Asteroid astr in _asteroid)
+        astr.Draw();
+      _bullet.Draw();
       Buffer.Render();
     }
 
@@ -112,11 +113,26 @@ namespace SpaceGame
     {
       foreach (BaseObject obj in _objs)
         obj.Update();
+      foreach (Asteroid astr in _asteroid)
+      {
+        astr.Update();
+        if (astr.Collision(_bullet))
+        {
+          System.Media.SystemSounds.Hand.Play();
+          astr.Death();
+          _bullet.Death();
+        }
+      }
+      _bullet.Update();
     }
-    /// <summary>
-    /// Массив хранения объектов
-    /// </summary>
-    public static BaseObject[] _objs;
+
+    #region drawning objects
+
+    private static BaseObject[] _objs;
+    private static Bullet _bullet;
+    private static Asteroid[] _asteroid;
+
+    #endregion
 
     /// <summary>
     /// Метод загрузки объектов для инициализации
@@ -124,20 +140,24 @@ namespace SpaceGame
     public static void Load()
     {
       int i = 0;
+      Random rnd = new Random();
+
       _objs = new BaseObject[30];
+      _bullet = new Bullet(new Point(0, 210), new Point(5, 0), new Size(4, 1));
+      _asteroid = new Asteroid[3];
+
+      for (int j = 0; j < _asteroid.Length; j++)
+      {
+        int r = rnd.Next(5, 50);
+        _asteroid[j] = new Asteroid(new Point(Game.Width, rnd.Next(0, Game.Height)), new Point(-r / 5, 0), new Size(r, r));
+      }
+
+
       _objs[i++] = new Nebula(new Point(300, 300), new Point(-5, 0), new Size(100, 50));
-      //_objs[i++] = new Star(new Point(100, 100), new Point(-5, 0), new Size(100, 100));
-      //_objs[i++] = new BaseImageObject(new Point(100, 100), new Point(0, 0), new Size(100, 100), Properties.Resources.BigStar);
-      _objs[i++] = new BigStar(new Point(100, 100), 100);
+      _objs[i++] = new BigStar(new Point(100, 100), 250);
 
-      /*
-      for (; i < 10; i++)
-        _objs[i] = new BaseObject(new Point(600, i * 20), new Point(-i, -i), new Size(10, 10));
-      */
       for (; i < _objs.Length; i++)
-        _objs[i] = new Star(new Point(10 /*- i * 20*/, i * 20), new Point(-i, 0), new Size(3, 3));
-      //_objs[i] = new Star(new Point(600, i * 20), new Point(-i, 0), new Size(5, 5));
-
+        _objs[i] = new Star(new Point(10, i * 20), new Point(-i, 0), new Size(3, 3));
     }
   }
 }

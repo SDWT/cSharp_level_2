@@ -12,8 +12,9 @@ namespace SpaceGame
   /// <summary>
   /// Класс базового объекта
   /// </summary>
-  class BaseObject
+  public abstract class BaseObject : ICollision
   {
+    #region properties
     /// <summary>
     /// Расположение
     /// </summary>
@@ -28,6 +29,7 @@ namespace SpaceGame
     /// Размер
     /// </summary>
     protected Size Size;
+    #endregion
 
     /// <summary>
     /// Конструктор базового объекта по умолчанию
@@ -51,31 +53,49 @@ namespace SpaceGame
       Pos = pos;
       Dir = dir;
       this.Size = size;
+
+
+      if (Size.Width < 0 || Size.Height < 0)
+      {
+        throw new GameObjectException($"Размеры {this.GetType()} меньше нуля");
+      }
+      if (Size.Width > Game.Width / 4 || Size.Height > Game.Height / 4)
+      {
+        throw new GameObjectException($"Размеры {this.GetType()} Слишком большие нуля");
+      }
+      if (Math.Abs(Dir.X) > 50)
+      {
+        throw new GameObjectException($"Скорость {this.GetType()} слишком большая");
+      }
+      if (Dir.Y != 0)
+      {
+        throw new GameObjectException($"{this.GetType()} двигается по оси Y");
+      }
+      if (Pos.X <= -Size.Width || Pos.Y < 0 || Pos.Y > Game.Height)
+      {
+        throw new GameObjectException($"{this.GetType()} расположен неправильного");
+      }
+
     }
 
+    #region collision
     /// <summary>
-    /// Отрисовка базового объекта
+    /// Прямоугольник расположения объекта
     /// </summary>
-    public virtual void Draw()
-    {
-      Game.Buffer.Graphics.DrawEllipse(Pens.White, Pos.X, Pos.Y, Size.Width, Size.Height);
-    }
+    public Rectangle Rect => new Rectangle(Pos, Size);
+
+    public bool Collision(ICollision o) => o.Rect.IntersectsWith(this.Rect);
+    #endregion
+
 
     /// <summary>
-    /// Обновление состояния базового объекта
+    /// Абстрактный метод отрисовки
     /// </summary>
-    public virtual void Update()
-    {
-      Pos.X = Pos.X + Dir.X;
-      Pos.Y = Pos.Y + Dir.Y;
-      if (Pos.X < 0)
-        Dir.X = -Dir.X;
-      if (Pos.X > Game.Width)
-        Dir.X = -Dir.X;
-      if (Pos.Y < 0)
-        Dir.Y = -Dir.Y;
-      if (Pos.Y > Game.Height)
-        Dir.Y = -Dir.Y;
-    }
+    public abstract void Draw();
+
+    /// <summary>
+    /// Абстрактный метод обновления состояния
+    /// </summary>
+    public abstract void Update();
   }
 }
