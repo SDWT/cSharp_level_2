@@ -30,6 +30,17 @@ namespace SpaceGame
     protected Size Size;
 
     /// <summary>
+    /// Конструктор базового объекта по умолчанию
+    /// </summary>
+    public BaseObject()
+    {
+      Point p = new Point(0, 0);
+      Pos = p;
+      Dir = p;
+      this.Size = new Size(p);
+    }
+
+    /// <summary>
     /// Конструктор базового объекта
     /// </summary>
     /// <param name="pos">Расположение</param>
