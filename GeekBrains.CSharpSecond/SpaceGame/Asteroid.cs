@@ -9,12 +9,12 @@ using System.Drawing;
 
 namespace SpaceGame
 {
-  class Asteroid : BaseImageObject, ICloneable
+  class Asteroid : BaseImageObject, ICloneable, IComparable<Asteroid>
   {
     /// <summary>
     /// Сила Астероида
     /// </summary>
-    public int Power { get; set; }
+    public int Power { get; set; } = 3;
 
     public Asteroid() : base()
     {
@@ -66,6 +66,11 @@ namespace SpaceGame
       Pos.X = Game.Width + Size.Width;
       Pos.Y = (rnd.Next() % (Game.Height - 120)) + 60;
       Dir.X = -4 * ((rnd.Next() % 10) + 5);
+    }
+
+    int IComparable<Asteroid>.CompareTo(Asteroid other)
+    {
+      return (Power > other.Power) ? 1 : ((Power < other.Power) ? -1 : 0);
     }
   }
 }

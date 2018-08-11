@@ -31,6 +31,12 @@ namespace SpaceGame
     protected Size Size;
     #endregion
 
+    #region delegates
+
+    public delegate void Message();
+
+    #endregion
+
     /// <summary>
     /// Конструктор базового объекта по умолчанию
     /// </summary>
@@ -67,10 +73,10 @@ namespace SpaceGame
       {
         throw new GameObjectException($"Скорость {this.GetType()} слишком большая");
       }
-      if (Dir.Y != 0)
-      {
-        throw new GameObjectException($"{this.GetType()} двигается по оси Y");
-      }
+      //if (Dir.Y != 0)
+      //{
+      //  throw new GameObjectException($"{this.GetType()} двигается по оси Y");
+      //}
       if (Pos.X <= -Size.Width || Pos.Y < 0 || Pos.Y > Game.Height)
       {
         throw new GameObjectException($"{this.GetType()} расположен неправильного");

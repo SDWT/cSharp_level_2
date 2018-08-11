@@ -26,12 +26,28 @@ namespace SpaceGame
     /// <summary>
     /// Свойство Ширины игрового поля
     /// </summary>
-    public static int Width { get; set; }
+    public static int Width { get; set; } = 800;
 
     /// <summary>
     /// Свойство Высоты игрового поля
     /// </summary>
-    public static int Height { get; set; }
+    public static int Height { get; set; } = 600;
+    
+    #region drawning objects
+
+    private static BaseObject[] _objs;
+    private static Bullet _bullet;
+    private static Asteroid[] _asteroid;
+
+    #endregion
+
+    private static Timer _timer = new Timer();
+    /// <summary>
+    /// 
+    /// </summary>
+    public static Random rnd = new Random();
+
+    private static Ship _ship = new Ship(new Point(10, 400), new Point(5, 5), new Size(10, 10));
 
     /// <summary>
     /// Конструктор по умолчанию
@@ -79,11 +95,26 @@ namespace SpaceGame
       // Подгружаем объекты
       Load();
 
+      // Обработчики нажатий на клавиши
+      form.KeyDown += Form_KeyDown;
+
+      Ship.MessageDie += Finish;
+
       // Создаём таймер
-      Timer timer = new Timer();
-      timer.Interval = 100;
-      timer.Start();
-      timer.Tick += Timer_Tick;
+      //Timer timer = new Timer();
+      _timer.Interval = 100;
+      _timer.Start();
+      _timer.Tick += Timer_Tick;
+    }
+
+    private static void Form_KeyDown(object sender, KeyEventArgs e)
+    {
+      if (e.KeyCode == Keys.ControlKey)
+        _bullet =  new Bullet( new Point(_ship.Rect.X +  10 , _ship.Rect.Y +  4 ),  new Point( 4 ,  0 ),  new Size( 4 ,  1 ));
+      if (e.KeyCode == Keys.Up)
+        _ship.Up();
+      if (e.KeyCode == Keys.Down)
+        _ship.Down();
     }
 
     private static void Timer_Tick(object sender, EventArgs e)
@@ -101,8 +132,12 @@ namespace SpaceGame
       foreach (BaseObject obj in _objs)
         obj.Draw();
       foreach (Asteroid astr in _asteroid)
-        astr.Draw();
-      _bullet.Draw();
+        astr?.Draw();
+      _bullet?.Draw();
+      _ship?.Draw();
+
+      if (_ship is null)
+        Buffer.Graphics.DrawString("Energy:" + _ship.Energy, SystemFonts.DefaultFont, Brushes.White, 0, 0);
       Buffer.Render();
     }
 
@@ -113,26 +148,47 @@ namespace SpaceGame
     {
       foreach (BaseObject obj in _objs)
         obj.Update();
-      foreach (Asteroid astr in _asteroid)
+      for (int i = 0; i < _asteroid.Length; i++)
       {
-        astr.Update();
-        if (astr.Collision(_bullet))
+        if (_asteroid[i] == null)
+          continue;
+        _asteroid[i].Update();
+
+        if (_asteroid[i].Collision(_bullet))
         {
           System.Media.SystemSounds.Hand.Play();
-          astr.Death();
-          _bullet.Death();
+          //astr.Death();
+          //_bullet.Death();
+          _asteroid[i] = null;
+          _bullet = null;
+          continue;
         }
+        if (!_ship.Collision(_asteroid[i]))
+          continue;
+        var rnd = new Random();
+        _ship?.EnergyLow(rnd.Next(1, 10));
+        System.Media.SystemSounds.Asterisk.Play();
+        if (_ship.Energy <= 0)
+          _ship?.Die();
       }
-      _bullet.Update();
+
+      foreach (Asteroid astr in _asteroid)
+      {
+        //if (astr == null)
+        //  continue;
+        //astr.Update();
+
+        //if (astr.Collision(_bullet))
+        //{
+        //  System.Media.SystemSounds.Hand.Play();
+        //  //astr.Death();
+        //  //_bullet.Death();
+        //  astr = null;
+
+        //}
+      }
+      _bullet?.Update();
     }
-
-    #region drawning objects
-
-    private static BaseObject[] _objs;
-    private static Bullet _bullet;
-    private static Asteroid[] _asteroid;
-
-    #endregion
 
     /// <summary>
     /// Метод загрузки объектов для инициализации
@@ -158,6 +214,13 @@ namespace SpaceGame
 
       for (; i < _objs.Length; i++)
         _objs[i] = new Star(new Point(10, i * 20), new Point(-i, 0), new Size(3, 3));
+    }
+
+    public static void Finish()
+    {
+      _timer.Stop();
+      Buffer.Graphics.DrawString("The End", new Font(FontFamily.GenericSansSerif, 60, FontStyle.Underline), Brushes.White, 200, 100);
+      Buffer.Render();
     }
   }
 }
