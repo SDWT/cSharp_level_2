@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Text;
+
 
 
 namespace SpaceGame
@@ -30,6 +32,7 @@ namespace SpaceGame
       mainForm.Show();
       Game.Load();
       Game.Draw();
+
       Application.Run(mainForm);
     }
   }

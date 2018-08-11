@@ -49,6 +49,8 @@ namespace SpaceGame
 
     private static Ship _ship = new Ship(new Point(10, 400), new Point(5, 5), new Size(10, 10));
 
+    private static int _score = 0;
+
     /// <summary>
     /// Конструктор по умолчанию
     /// </summary>
@@ -138,6 +140,8 @@ namespace SpaceGame
 
       if (_ship is null)
         Buffer.Graphics.DrawString("Energy:" + _ship.Energy, SystemFonts.DefaultFont, Brushes.White, 0, 0);
+      Buffer.Graphics.DrawString(string.Format("Score: {0:D5}", _score), new Font(FontFamily.GenericMonospace, 20, FontStyle.Regular), Brushes.White, 10, 10);
+      Buffer.Graphics.DrawString(string.Format("HP: {0:D3}", _ship.Energy), new Font(FontFamily.GenericMonospace, 20, FontStyle.Regular), Brushes.White, 10, 40);
       Buffer.Render();
     }
 
@@ -154,19 +158,20 @@ namespace SpaceGame
           continue;
         _asteroid[i].Update();
 
-        if (_asteroid[i].Collision(_bullet))
+        if (_bullet != null && _asteroid[i].Collision(_bullet))
         {
           System.Media.SystemSounds.Hand.Play();
-          //astr.Death();
-          //_bullet.Death();
-          _asteroid[i] = null;
-          _bullet = null;
+          _asteroid[i].Death();
+          _bullet.Death();
+          _score += _asteroid[i].Power;
+          //_asteroid[i] = null;
+          //_bullet = null;
           continue;
         }
         if (!_ship.Collision(_asteroid[i]))
           continue;
         var rnd = new Random();
-        _ship?.EnergyLow(rnd.Next(1, 10));
+        _ship?.EnergyLow(_asteroid[i].Power * rnd.Next(1, 10));
         System.Media.SystemSounds.Asterisk.Play();
         if (_ship.Energy <= 0)
           _ship?.Die();
@@ -198,14 +203,18 @@ namespace SpaceGame
       int i = 0;
       Random rnd = new Random();
 
-      _objs = new BaseObject[30];
+      _objs = new BaseObject[50];
       _bullet = new Bullet(new Point(0, 210), new Point(5, 0), new Size(4, 1));
-      _asteroid = new Asteroid[3];
+      _asteroid = new Asteroid[10];
 
       for (int j = 0; j < _asteroid.Length; j++)
       {
         int r = rnd.Next(5, 50);
         _asteroid[j] = new Asteroid(new Point(Game.Width, rnd.Next(0, Game.Height)), new Point(-r / 5, 0), new Size(r, r));
+        if (j % 4 == 0)
+        {
+          _asteroid[j] = new Aid_kit(new Point(Game.Width, rnd.Next(0, Game.Height)), new Point(-r / 5, 0), new Size(r, r));
+        }
       }
 
 

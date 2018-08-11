@@ -23,6 +23,8 @@ namespace SpaceGame
     public void EnergyLow(int n)
     {
       _energy -= n;
+      if (_energy > 100)
+        _energy = 100;
     }
 
     /// <summary>

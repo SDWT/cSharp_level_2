@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aid_kit.cs" />
     <Compile Include="Asteroid.cs" />
     <Compile Include="BaseImageObject.cs" />
     <Compile Include="BaseObject.cs" />
@@ -83,6 +84,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\bigStar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resource\asteroid.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resource\aid_kit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

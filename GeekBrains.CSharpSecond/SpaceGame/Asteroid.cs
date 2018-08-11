@@ -19,20 +19,19 @@ namespace SpaceGame
     public Asteroid() : base()
     {
       Dir.Y = 0;
-      Img = Properties.Resources.bigStar;
+      Img = Properties.Resources.asteroid;
       Power = 1;
     }
 
     /// <summary>
-    /// Конструктор класса звезды
+    /// Конструктор класса астероида
     /// </summary>
     /// <param name="pos">Расположение</param>
     /// <param name="dir">Направление</param>
     /// <param name="size">Размер</param>
-    public Asteroid(Point pos, Point dir, Size size) : base(pos, dir, size, Properties.Resources.bigStar)
+    public Asteroid(Point pos, Point dir, Size size) : base(pos, dir, size, Properties.Resources.asteroid)
     {
       Dir.Y = 0;
-      Img = Properties.Resources.bigStar;
       Power = 1;
     }
 
@@ -41,7 +40,9 @@ namespace SpaceGame
     /// </summary>
     public override void Draw()
     {
-      Game.Buffer.Graphics.FillEllipse(Brushes.White, Pos.X, Pos.Y, Size.Width, Size.Height);
+      //Game.Buffer.Graphics.FillEllipse(Brushes.White, Pos.X, Pos.Y, Size.Width, Size.Height);
+      Rectangle rect = new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height);
+      Game.Buffer.Graphics.DrawImage(Img, rect);
     }
 
     public override void Update()
