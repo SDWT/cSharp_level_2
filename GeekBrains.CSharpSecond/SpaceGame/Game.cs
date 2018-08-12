@@ -51,6 +51,8 @@ namespace SpaceGame
 
     private static int _score = 0;
 
+    public static Action<string> _log;
+
     /// <summary>
     /// Конструктор по умолчанию
     /// </summary>
@@ -101,6 +103,7 @@ namespace SpaceGame
       form.KeyDown += Form_KeyDown;
 
       Ship.MessageDie += Finish;
+      _log += Log.FileOut;
 
       // Создаём таймер
       //Timer timer = new Timer();
@@ -164,6 +167,8 @@ namespace SpaceGame
           _asteroid[i].Death();
           _bullet.Death();
           _score += _asteroid[i].Power;
+
+          _log($"Получено {_asteroid[i].Power} очков за сбитый астероид.\n");
           //_asteroid[i] = null;
           //_bullet = null;
           continue;
@@ -172,9 +177,16 @@ namespace SpaceGame
           continue;
         var rnd = new Random();
         _ship?.EnergyLow(_asteroid[i].Power * rnd.Next(1, 10));
+
+        _log($"Получен урон {_asteroid[i].Power} от астероида.\n");
+
         System.Media.SystemSounds.Asterisk.Play();
         if (_ship.Energy <= 0)
+        {
           _ship?.Die();
+
+          _log($"Ваш корабль уничтожен.\nВы проиграли.\n");
+        }
       }
 
       foreach (Asteroid astr in _asteroid)
