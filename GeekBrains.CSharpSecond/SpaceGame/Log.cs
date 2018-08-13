@@ -11,8 +11,13 @@ namespace SpaceGame
 {
   static class Log
   {
-    public static void FileOut(string msg)
+    static Log()
     {
+      File.WriteAllText("log.txt", string.Empty);
+    }
+
+    public static void FileOut(string msg)
+    {      
       File.AppendAllText("log.txt", msg);
     }
   }

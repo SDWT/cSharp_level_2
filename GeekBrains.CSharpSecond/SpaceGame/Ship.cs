@@ -12,6 +12,7 @@ namespace SpaceGame
   class Ship : BaseObject
   {
     private int _energy = 100;
+    private const int MaxEnergy = 100;
     public int Energy { get => _energy; }
 
     public static event Message MessageDie;
@@ -23,8 +24,8 @@ namespace SpaceGame
     public void EnergyLow(int n)
     {
       _energy -= n;
-      if (_energy > 100)
-        _energy = 100;
+      if (_energy > MaxEnergy)
+        _energy = MaxEnergy;
     }
 
     /// <summary>
