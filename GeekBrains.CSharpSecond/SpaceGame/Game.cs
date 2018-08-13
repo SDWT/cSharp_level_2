@@ -36,7 +36,8 @@ namespace SpaceGame
     #region drawning objects
 
     private static BaseObject[] _objs;
-    private static Bullet _bullet;
+    //private static Bullet _bullet;
+    private static List<Bullet> _bullets = new List<Bullet>();
     private static Asteroid[] _asteroid;
 
     #endregion
@@ -52,6 +53,7 @@ namespace SpaceGame
     private static int _score = 0;
 
     public static Action<string> _log;
+    public static Action _close;
 
     /// <summary>
     /// Конструктор по умолчанию
@@ -69,7 +71,7 @@ namespace SpaceGame
       // Предоставляет доступ к главному буферу графического контекста для текущего приложения
       _context = BufferedGraphicsManager.Current;
       g = form.CreateGraphics();
-
+      _close = form.Close;
       // Создаем объект (поверхность рисования) и связываем его с формой
       // Запоминаем размеры формы
       Width = form.Width;
@@ -115,11 +117,13 @@ namespace SpaceGame
     private static void Form_KeyDown(object sender, KeyEventArgs e)
     {
       if (e.KeyCode == Keys.ControlKey)
-        _bullet =  new Bullet( new Point(_ship.Rect.X +  10 , _ship.Rect.Y +  4 ),  new Point( 4 ,  0 ),  new Size( 4 ,  1 ));
+        _bullets.Add(new Bullet(new Point(_ship.Rect.X + _ship.Rect.Width / 2, _ship.Rect.Y + _ship.Rect.Height / 2), new Point(4, 0), new Size(4, 1)));
       if (e.KeyCode == Keys.Up)
         _ship.Up();
       if (e.KeyCode == Keys.Down)
         _ship.Down();
+      if (e.KeyCode == Keys.Escape)
+        _close();
     }
 
     private static void Timer_Tick(object sender, EventArgs e)
@@ -138,7 +142,9 @@ namespace SpaceGame
         obj.Draw();
       foreach (Asteroid astr in _asteroid)
         astr?.Draw();
-      _bullet?.Draw();
+      foreach (Bullet b in _bullets)
+        b.Draw();
+
       _ship?.Draw();
 
       if (_ship is null)
@@ -155,27 +161,35 @@ namespace SpaceGame
     {
       foreach (BaseObject obj in _objs)
         obj.Update();
+      foreach (Bullet b in _bullets)
+        b.Update();
+
       for (int i = 0; i < _asteroid.Length; i++)
       {
         if (_asteroid[i] == null)
           continue;
         _asteroid[i].Update();
 
-        if (_bullet != null && _asteroid[i].Collision(_bullet))
+        for (int j = 0; j < _bullets.Count; j++)
         {
-          System.Media.SystemSounds.Hand.Play();
-          _asteroid[i].Death();
-          _bullet.Death();
-
-          if (!(_asteroid[i] is Aid_kit))
+          if (_bullets[j].Collision(_asteroid[i]))
           {
-            _score += _asteroid[i].Power;
-            _log($"Получено {_asteroid[i].Power} очков за сбитый астероид.\n");
+            System.Media.SystemSounds.Hand.Play();
+            _asteroid[i].Death();
+            _bullets.RemoveAt(j);
+            j--;
+            if (!(_asteroid[i] is Aid_kit))
+            {
+              _score += _asteroid[i].Power;
+              _log($"Получено {_asteroid[i].Power} очков за сбитый астероид.\n");
+            }
+            //_asteroid[i] = null;
+            //_bullet = null;
+            continue;
           }
-          //_asteroid[i] = null;
-          //_bullet = null;
-          continue;
         }
+
+        
         if (!_ship.Collision(_asteroid[i]))
           continue;
         var rnd = new Random();
@@ -210,7 +224,6 @@ namespace SpaceGame
 
         //}
       }
-      _bullet?.Update();
     }
 
     /// <summary>
@@ -222,7 +235,7 @@ namespace SpaceGame
       Random rnd = new Random();
 
       _objs = new BaseObject[50];
-      _bullet = new Bullet(new Point(0, 210), new Point(5, 0), new Size(4, 1));
+      //_bullet = new Bullet(new Point(0, 210), new Point(5, 0), new Size(4, 1));
       _asteroid = new Asteroid[10];
 
       for (int j = 0; j < _asteroid.Length; j++)
