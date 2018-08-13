@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace SpaceGame
+namespace SpaceGameConsole
 {
   /// <summary>
   /// Класс игры для отрисовки и обработки
@@ -104,6 +104,7 @@ namespace SpaceGame
 
       Ship.MessageDie += Finish;
       _log += Log.FileOut;
+      _log += Log.ConsoleOut;
 
       // Создаём таймер
       //Timer timer = new Timer();
