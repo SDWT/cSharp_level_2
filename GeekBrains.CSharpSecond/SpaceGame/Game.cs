@@ -32,13 +32,18 @@ namespace SpaceGame
     /// Свойство Высоты игрового поля
     /// </summary>
     public static int Height { get; set; } = 600;
-    
+
     #region drawning objects
 
     private static BaseObject[] _objs;
     //private static Bullet _bullet;
+    private static int _maxBullets = 25;
     private static List<Bullet> _bullets = new List<Bullet>();
-    private static Asteroid[] _asteroid;
+
+    private static int _maxAsteroids = 10;
+    private static List<Asteroid> _asteroids = new List<Asteroid>();
+
+    //private static Asteroid[] _asteroid;
 
     #endregion
 
@@ -72,6 +77,7 @@ namespace SpaceGame
       _context = BufferedGraphicsManager.Current;
       g = form.CreateGraphics();
       _close = form.Close;
+
       // Создаем объект (поверхность рисования) и связываем его с формой
       // Запоминаем размеры формы
       Width = form.Width;
@@ -99,7 +105,7 @@ namespace SpaceGame
       Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
 
       // Подгружаем объекты
-      Load();
+      //Load();
 
       // Обработчики нажатий на клавиши
       form.KeyDown += Form_KeyDown;
@@ -116,7 +122,7 @@ namespace SpaceGame
 
     private static void Form_KeyDown(object sender, KeyEventArgs e)
     {
-      if (e.KeyCode == Keys.ControlKey)
+      if (e.KeyCode == Keys.ControlKey && _bullets.Count < _maxBullets)
         _bullets.Add(new Bullet(new Point(_ship.Rect.X + _ship.Rect.Width / 2, _ship.Rect.Y + _ship.Rect.Height / 2), new Point(4, 0), new Size(4, 1)));
       if (e.KeyCode == Keys.Up)
         _ship.Up();
@@ -140,7 +146,7 @@ namespace SpaceGame
       Buffer.Graphics.Clear(Color.Black);
       foreach (BaseObject obj in _objs)
         obj.Draw();
-      foreach (Asteroid astr in _asteroid)
+      foreach (Asteroid astr in _asteroids)
         astr?.Draw();
       foreach (Bullet b in _bullets)
         b.Draw();
@@ -164,41 +170,49 @@ namespace SpaceGame
       foreach (Bullet b in _bullets)
         b.Update();
 
-      for (int i = 0; i < _asteroid.Length; i++)
+      for (int i = 0; i < _asteroids.Count; i++)
       {
-        if (_asteroid[i] == null)
+        if (_asteroids[i] == null || (_asteroids[i] is Aid_kit && _asteroids[i].Rect.X < 0))
+        {
+          _asteroids.RemoveAt(i--);
           continue;
-        _asteroid[i].Update();
+        }
+        _asteroids[i].Update();
 
         for (int j = 0; j < _bullets.Count; j++)
         {
-          if (_bullets[j].Collision(_asteroid[i]))
+          if (_bullets[j].Rect.X > Game.Width)
+          {
+            //_log($"Было: {_bullets.Count} Стало: {_bullets.Count - 1}.\n");
+            _bullets.RemoveAt(j--);
+            continue;
+          }
+
+          if (_bullets[j].Collision(_asteroids[i]))
           {
             System.Media.SystemSounds.Hand.Play();
-            _asteroid[i].Death();
-            _bullets.RemoveAt(j);
-            j--;
-            if (!(_asteroid[i] is Aid_kit))
+            if (!(_asteroids[i] is Aid_kit))
             {
-              _score += _asteroid[i].Power;
-              _log($"Получено {_asteroid[i].Power} очков за сбитый астероид.\n");
+              _score += _asteroids[i].Power;
+              _log($"Получено {_asteroids[i].Power} очков за сбитый астероид.\n");
             }
+            _asteroids.RemoveAt(i--);
+            _bullets.RemoveAt(j--);
+            break;
             //_asteroid[i] = null;
             //_bullet = null;
-            continue;
           }
         }
 
-        
-        if (!_ship.Collision(_asteroid[i]))
+        if (i < 0 || !_ship.Collision(_asteroids[i]))
           continue;
         var rnd = new Random();
-        _ship?.EnergyLow(_asteroid[i].Power * rnd.Next(1, 10));
+        _ship?.EnergyLow(_asteroids[i].Power * rnd.Next(1, 10));
 
-        if (_asteroid[i] is Aid_kit)
+        if (_asteroids[i] is Aid_kit)
           _log($"Очки здоровья востановлены.\n");
-        else if (_asteroid[i] is Asteroid)
-          _log($"Получен урон {_asteroid[i].Power} от астероида.\n");
+        else if (_asteroids[i] is Asteroid)
+          _log($"Получен урон {_asteroids[i].Power} от астероида.\n");
 
         System.Media.SystemSounds.Asterisk.Play();
         if (_ship.Energy <= 0)
@@ -209,21 +223,28 @@ namespace SpaceGame
         }
       }
 
-      foreach (Asteroid astr in _asteroid)
+      if (_asteroids.Count <= 0)
       {
-        //if (astr == null)
-        //  continue;
-        //astr.Update();
-
-        //if (astr.Collision(_bullet))
-        //{
-        //  System.Media.SystemSounds.Hand.Play();
-        //  //astr.Death();
-        //  //_bullet.Death();
-        //  astr = null;
-
-        //}
+        AddAsteroids();
       }
+
+      #region Old Asteroids
+      //foreach (Asteroid astr in _asteroid)
+      //{
+      //if (astr == null)
+      //  continue;
+      //astr.Update();
+
+      //if (astr.Collision(_bullet))
+      //{
+      //  System.Media.SystemSounds.Hand.Play();
+      //  //astr.Death();
+      //  //_bullet.Death();
+      //  astr = null;
+
+      //}
+      //}
+      #endregion
     }
 
     /// <summary>
@@ -235,19 +256,21 @@ namespace SpaceGame
       Random rnd = new Random();
 
       _objs = new BaseObject[50];
-      //_bullet = new Bullet(new Point(0, 210), new Point(5, 0), new Size(4, 1));
-      _asteroid = new Asteroid[10];
+      #region Old Asteroids
+      //_asteroid = new Asteroid[10];
 
-      for (int j = 0; j < _asteroid.Length; j++)
-      {
-        int r = rnd.Next(5, 50);
-        _asteroid[j] = new Asteroid(new Point(Game.Width, rnd.Next(0, Game.Height)), new Point(-r / 5, 0), new Size(r, r));
-        if (j % 4 == 0)
-        {
-          _asteroid[j] = new Aid_kit(new Point(Game.Width, rnd.Next(0, Game.Height)), new Point(-r / 5, 0), new Size(r, r));
-        }
-      }
+      //for (int j = 0; j < _asteroid.Length; j++)
+      //{
+      //  int r = rnd.Next(5, 50);
+      //  _asteroid[j] = new Asteroid(new Point(Game.Width, rnd.Next(0, Game.Height)), new Point(-r / 5, 0), new Size(r, r));
+      //  if (j % 4 == 0)
+      //  {
+      //    _asteroid[j] = new Aid_kit(new Point(Game.Width, rnd.Next(0, Game.Height)), new Point(-r / 5, 0), new Size(r, r));
+      //  }
+      //}
 
+      #endregion
+      AddAsteroids();
 
       _objs[i++] = new Nebula(new Point(300, 300), new Point(-5, 0), new Size(100, 50));
       _objs[i++] = new BigStar(new Point(100, 100), 250);
@@ -256,11 +279,39 @@ namespace SpaceGame
         _objs[i] = new Star(new Point(10, i * 20), new Point(-i, 0), new Size(3, 3));
     }
 
+    /// <summary>
+    /// Метод окончания игры
+    /// </summary>
     public static void Finish()
     {
       _timer.Stop();
       Buffer.Graphics.DrawString("The End", new Font(FontFamily.GenericSansSerif, 60, FontStyle.Underline), Brushes.White, 200, 100);
       Buffer.Render();
+    }
+
+    /// <summary>
+    /// Метод добавления астероидов по максимальному числу
+    /// </summary>
+    private static void AddAsteroids()
+    {
+      AddAsteroids(_maxAsteroids++);
+    }
+
+    /// <summary>
+    /// Метод добавления астероидов по количеству
+    /// </summary>
+    /// <param name="count">Количество</param>
+    private static void AddAsteroids(int count)
+    {
+      for (int j = 0; j < count; j++)
+      {
+        int r = rnd.Next(5, 50);
+
+        if (j % 5 == 0)
+          _asteroids.Add(new Aid_kit(new Point((int)(Game.Width * (1 + r / 100.0)), rnd.Next(0, Game.Height)), new Point(-r / 5, 0), new Size(r, r)));
+        else
+          _asteroids.Add(new Asteroid(new Point((int)(Game.Width * (1 + r / 100.0)), rnd.Next(0, Game.Height)), new Point(-r / 5, 0), new Size(r, r)));
+      }
     }
   }
 }

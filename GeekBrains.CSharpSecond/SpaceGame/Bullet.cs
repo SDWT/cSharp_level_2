@@ -36,17 +36,15 @@ namespace SpaceGame
     public override void Update()
     {
       Pos.X = Pos.X + 3;
-      if (Pos.X > Game.Width)
-      {
-        Death();
-      }
+      //if (Pos.X > Game.Width)
+      //{
+      //  Death();
+      //}
     }
 
     public void Death()
     {
       //Random rnd = new Random(Pos.Y);
-      Pos.X = 0;
-      Pos.Y = 210;
     }
   }
 }

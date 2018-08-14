@@ -37,6 +37,7 @@ namespace SpaceGameConsole
 
     private static BaseObject[] _objs;
     //private static Bullet _bullet;
+    private static int _maxBullets = 25;
     private static List<Bullet> _bullets = new List<Bullet>();
 
     private static int _maxAsteroids = 10;
@@ -122,7 +123,7 @@ namespace SpaceGameConsole
 
     private static void Form_KeyDown(object sender, KeyEventArgs e)
     {
-      if (e.KeyCode == Keys.ControlKey)
+      if (e.KeyCode == Keys.ControlKey && _bullets.Count < _maxBullets)
         _bullets.Add(new Bullet(new Point(_ship.Rect.X + _ship.Rect.Width / 2, _ship.Rect.Y + _ship.Rect.Height / 2), new Point(4, 0), new Size(4, 1)));
       if (e.KeyCode == Keys.Up)
         _ship.Up();
@@ -172,7 +173,7 @@ namespace SpaceGameConsole
 
       for (int i = 0; i < _asteroids.Count; i++)
       {
-        if (_asteroids[i] == null)
+        if (_asteroids[i] == null || (_asteroids[i] is Aid_kit && _asteroids[i].Rect.X < 0))
         {
           _asteroids.RemoveAt(i--);
           continue;
@@ -191,19 +192,20 @@ namespace SpaceGameConsole
           if (_bullets[j].Collision(_asteroids[i]))
           {
             System.Media.SystemSounds.Hand.Play();
-            _asteroids.RemoveAt(i--);
-            _bullets.RemoveAt(j--);
             if (!(_asteroids[i] is Aid_kit))
             {
               _score += _asteroids[i].Power;
               _log($"Получено {_asteroids[i].Power} очков за сбитый астероид.\n");
             }
+            _asteroids.RemoveAt(i--);
+            _bullets.RemoveAt(j--);
+            break;
             //_asteroid[i] = null;
             //_bullet = null;
           }
         }
 
-        if (!_ship.Collision(_asteroids[i]))
+        if (i < 0 || !_ship.Collision(_asteroids[i]))
           continue;
         var rnd = new Random();
         _ship?.EnergyLow(_asteroids[i].Power * rnd.Next(1, 10));
