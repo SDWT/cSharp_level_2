@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace HW4.Task2
 {
+  /// <summary>
+  /// Мой класс расширяемых методов для коллекций
+  /// </summary>
   public static class MyExtansion
   {
+    /// <summary>
+    /// Метод для подсчёта количества каждого элемента коллекции
+    /// </summary>
+    /// <param name="Col">Коллекция</param>
+    /// <returns>Словарь: значение - количество</returns>
     public static Dictionary<int, int> CountExsampes(this IEnumerable<int> Col)
     {
       Dictionary<int, int> dict = new Dictionary<int, int>();
@@ -21,6 +29,12 @@ namespace HW4.Task2
       return dict;
     }
 
+    /// <summary>
+    /// Метод для подсчёта количества каждого элемента коллекции
+    /// </summary>
+    /// <typeparam name="T">Тип элементов в коллекции</typeparam>
+    /// <param name="Col">Коллекция</param>
+    /// <returns>Словарь: значение - количество</returns>
     public static Dictionary<T, int> CountExsampes<T>(this IEnumerable<T> Col)
     {
       Dictionary<T, int> dict = new Dictionary<T, int>();
@@ -33,5 +47,30 @@ namespace HW4.Task2
       }
       return dict;
     }
+
+    /// <summary>
+    /// Метод для подсчёта количества каждого элемента коллекции с помощью LINQ
+    /// </summary>
+    /// <typeparam name="T">Тип элементов в коллекции</typeparam>
+    /// <param name="Col">Коллекция</param>
+    /// <returns>Словарь: значение - количество</returns>
+    public static void CountExsampesLinqConsole<TSource>(this IEnumerable<TSource> Col)
+    {
+      var dict5 = (Col.GroupBy(e => e).Select(i => new { Value = i.First(), Count = i.Count()}));
+      
+
+      foreach (var item in dict5)
+      {
+        Console.WriteLine(item);
+      }
+      Console.WriteLine();
+    }
+
+    //public static IEnumerable<TResult> CountExsampesLinq<TSource, TResult>(this IEnumerable<TSource> Col)
+    //{
+    //  return (Col.GroupBy(e => e).Select(i => new { Value = i.First(), Count = i.Count()}));
+
+
+    //}
   }
 }

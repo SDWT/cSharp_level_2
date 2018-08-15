@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Collections.ObjectModel;
+﻿// Samsonov
+// HW4 Task: 2.c
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,23 +70,47 @@ namespace HW4.Task2
       #endregion
       #region Linq count
 
-      
-      //Console.WriteLine("Collection<T>");
-      //var dict4 = L.CountExsampes<int>();
+      Console.WriteLine("Linq");
+
+      #region Linq v1
+
+      //var dict4 = (from cnt in (from n in L
+      //            group n by n)
+      //            select (cnt => new { cnt.First(), cnt.Count()}));
+
+      //var dict4 = (L.GroupBy(e => e).Select(i => new { Value = i.First(), Count = i.Count() }));
+
+      //foreach (var item in dict4)
+      //{
+      //  foreach (var obj in item)
+      //  {
+      //    Console.WriteLine(obj);
+      //  }
+      //}
+
+      //Console.WriteLine(dict4.GetType());
+      //Console.WriteLine(dict4);
 
       //foreach (var item in dict4)
       //{
       //  Console.WriteLine(item);
       //}
       //Console.WriteLine();
-      
-      //var dict5 = Q.CountExsampes<string>();
+
+      //var dict5 = (Q.GroupBy(e => e).Select(i => new { Value = i.First(), Count = i.Count() }));
 
       //foreach (var item in dict5)
       //{
       //  Console.WriteLine(item);
       //}
       //Console.WriteLine();
+
+      #endregion
+
+
+      L.CountExsampesLinqConsole();
+
+      Q.CountExsampesLinqConsole();
       #endregion
 
       return;
