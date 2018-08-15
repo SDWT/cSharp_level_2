@@ -9,8 +9,15 @@ using System.Threading.Tasks;
 
 namespace HW4.Task2
 {
+  /// <summary>
+  /// Класс приложения
+  /// </summary>
   class Program
   {
+    /// <summary>
+    /// Точка входа в программу
+    /// </summary>
+    /// <param name="args">Параметры запуска</param>
     static void Main(string[] args)
     {
 
@@ -107,10 +114,38 @@ namespace HW4.Task2
 
       #endregion
 
+      #region Linq v2
+      //L.CountExsampesLinqConsole();
 
-      L.CountExsampesLinqConsole();
+      //Q.CountExsampesLinqConsole();
+      #endregion
 
-      Q.CountExsampesLinqConsole();
+      #region Linq v3
+
+      #endregion
+
+
+      var dict6 = L.CountExsampesLinq();
+      foreach (var item in dict6)
+      {
+        Console.WriteLine(item);
+      }
+
+      var res = Q.CountExsampesLinq();
+
+      Console.WriteLine("\nTest: add element \"cat\" after method before foreach");
+      foreach (var item in res)
+      {
+        Console.WriteLine(item);
+      }
+      Console.WriteLine();
+      Q.Enqueue("cat");
+      foreach (var item in res)
+      {
+        Console.WriteLine(item);
+      }
+      Console.WriteLine();
+
       #endregion
 
       return;
