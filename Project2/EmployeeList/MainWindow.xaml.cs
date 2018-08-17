@@ -45,26 +45,18 @@ namespace EmployeeList
       
       InitializeComponent();
 
-      if (lbEmployee.SelectedIndex == -1)
-      {
-        cbDepartments.IsEnabled = false;
-        tbEditName.IsEnabled = false;
-      }
+      //if (lbEmployee.SelectedIndex == -1)
+      //{
+      //  cbDepartments.IsEnabled = true;
+      //}
+
+      cbDepartments.IsEditable = true;
       lbEmployee.ItemsSource = Employee.Employees;
       cbDepartments.ItemsSource = Department.Departments;
-      cbDepartments.SelectionChanged += CbDepartments_SelectionChanged;
+      saveEditEmp.Click += SaveEditEmpButton_Click;
+      resetEditEmp.Click += ResetEditEmpButton_Click;
     }
 
-    /// <summary>
-    /// Обработчик смены выбранного элемента в списке отделов
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void CbDepartments_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-      Employee.Employees[lbEmployee.SelectedIndex].DepartmentId = cbDepartments.SelectedIndex;
-    }
-    
     /// <summary>
     /// Обработчик смены выбранного элемента в списке сотрудников
     /// </summary>
@@ -74,15 +66,41 @@ namespace EmployeeList
     {
       if (lbEmployee.SelectedIndex == -1)
       {
-        cbDepartments.IsEnabled = false;
-        tbEditName.IsEnabled = false;
         return;
       }
       cbDepartments.SelectedIndex = Employee.Employees[lbEmployee.SelectedIndex].DepartmentId;
-      tbEditName.Text = Employee.Employees[lbEmployee.SelectedIndex].Name;
+      lEditName.Content = Employee.Employees[lbEmployee.SelectedIndex].Name;
 
       cbDepartments.IsEnabled = true;
-      tbEditName.IsEnabled = true;
+    }
+
+    /// <summary>
+    /// Обработчик нажатия на кнопку сохранить в редактировании сотрудника
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void SaveEditEmpButton_Click(object sender, RoutedEventArgs e)
+    {
+      if (lbEmployee.SelectedIndex == -1)
+      {
+        return;
+      }
+      Employee.Employees[lbEmployee.SelectedIndex].DepartmentId = cbDepartments.SelectedIndex;
+
+      // Костыль
+      lbEmployee.ItemsSource = new List<int>();
+      lbEmployee.ItemsSource = Employee.Employees;
+    }
+
+    /// <summary>
+    /// Обработчик нажатия на кнопку отменить в редактировании сотрудника
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void ResetEditEmpButton_Click(object sender, RoutedEventArgs e)
+    {
+      cbDepartments.SelectedIndex = Employee.Employees[lbEmployee.SelectedIndex].DepartmentId;
+      lEditName.Content = Employee.Employees[lbEmployee.SelectedIndex].Name;
     }
   }
 }

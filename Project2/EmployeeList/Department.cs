@@ -61,7 +61,7 @@ namespace EmployeeList
     /// <returns>Отдел</returns>
     public static Department Find(int index)
     {
-      return (index >= Departments.Count) ? Department.DefaultDepartment : Departments[index];
+      return (index >= Departments.Count || index < 0) ? Department.DefaultDepartment : Departments[index];
     }
 
     //public static void LoadDepartment(string data)

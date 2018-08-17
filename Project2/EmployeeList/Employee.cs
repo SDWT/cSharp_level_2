@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace EmployeeList
     /// <summary>
     /// Список сотрудников
     /// </summary>
-    public static List<Employee> Employees { get; } = new List<Employee>();
+    public static ObservableCollection<Employee> Employees { get; } = new ObservableCollection<Employee>();
     #endregion
 
     #region Static Methods
@@ -66,7 +67,7 @@ namespace EmployeeList
     /// <returns>Строка</returns>
     public override string ToString()
     {
-      return $"{Name} - {Department.Departments[DepartmentId]}";
+      return $"{Name} - {Department.Find(DepartmentId)}";
     }
     #endregion
   }
