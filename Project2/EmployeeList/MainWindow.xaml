@@ -10,6 +10,7 @@
   <Window.Resources>
     <sys:String x:Key="strName">Имя</sys:String>
     <sys:String x:Key="strDepartment">Отдел</sys:String>
+    
   </Window.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
@@ -21,8 +22,7 @@
              SelectionMode="Single"
              SelectionChanged="lbEmployee_SelectionChanged"
              VerticalAlignment="Top"
-             Height="250"
-             ItemsSource="{Binding}"/>
+             Height="250"/>
     <StackPanel Grid.Column="1" Orientation="Vertical" Name="EditPanel">
       <StackPanel.Resources>
         <Style TargetType="StackPanel">

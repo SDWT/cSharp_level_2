@@ -7,34 +7,67 @@ using System.Threading.Tasks;
 namespace EmployeeList
 {
   /// <summary>
-  /// Класс работника
+  /// Класс сотрудника
   /// </summary>
-  class Employee
+  public class Employee
   {
+    #region Static Properties
+    /// <summary>
+    /// Список сотрудников
+    /// </summary>
     public static List<Employee> Employees { get; } = new List<Employee>();
-    private static int _count = 0;
+    #endregion
 
-    public int Id { get; }
-
-    public string Name { get; }
-
-    public int DepartmentId { get; set; }
-
-    private Employee(string Name, Department Department) 
-    {
-      this.Name = Name;
-      this.Id = _count++;
-      this.DepartmentId = Department.Id;
-    }
-
+    #region Static Methods
+    /// <summary>
+    /// Метод добавления сотрудника
+    /// </summary>
+    /// <param name="Name">Имя</param>
+    /// <param name="Department">Отдел</param>
     public static void AddEmployee(string Name, Department Department)
     {
       Employees.Add(new Employee(Name, Department));
     }
+    #endregion
 
+    #region Properties
+    /// <summary>
+    /// Номер сотрудника
+    /// </summary>
+    public int Id { get; }
+
+    /// <summary>
+    /// Имя сотрудника
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// Номер отдела
+    /// </summary>
+    public int DepartmentId { get; set; }
+    #endregion
+
+    #region Methods
+    /// <summary>
+    /// Конструктор сотрудника
+    /// </summary>
+    /// <param name="Name">Имя</param>
+    /// <param name="Department">Отдел</param>
+    private Employee(string Name, Department Department) 
+    {
+      this.Name = Name;
+      this.Id = Employees.Count;
+      this.DepartmentId = Department.Id;
+    }
+
+    /// <summary>
+    /// Переопределение метода преобразования сотрудника в строку
+    /// </summary>
+    /// <returns>Строка</returns>
     public override string ToString()
     {
       return $"{Name} - {Department.Departments[DepartmentId]}";
     }
+    #endregion
   }
 }
