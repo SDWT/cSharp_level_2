@@ -1,0 +1,58 @@
+﻿<Window x:Class="EmployeeList.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EmployeeList"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" MinWidth="500" MinHeight="450">
+  <Window.Resources>
+    <sys:String x:Key="strName">Имя</sys:String>
+    <sys:String x:Key="strDepartment">Отдел</sys:String>
+  </Window.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="1*"/>
+      <ColumnDefinition Width="2*"/>
+    </Grid.ColumnDefinitions>
+    <ListBox Grid.Column="0"
+             Name="lbEmployee" 
+             SelectionMode="Single"
+             SelectionChanged="lbEmployee_SelectionChanged"
+             VerticalAlignment="Top"
+             Height="250"
+             ItemsSource="{Binding}"/>
+    <StackPanel Grid.Column="1" Orientation="Vertical" Name="EditPanel">
+      <StackPanel.Resources>
+        <Style TargetType="StackPanel">
+          <Setter Property="Orientation" Value="Horizontal"/>
+        </Style>
+        <Style TargetType="Label">
+          <Setter Property="Width" Value="100"/>
+        </Style>
+        <Style TargetType="ComboBox">
+          <Setter Property="Width" Value="200"/>
+        </Style>
+        <Style TargetType="TextBox">
+          <Setter Property="Width" Value="200"/>
+        </Style>
+      </StackPanel.Resources>
+      
+      <StackPanel>
+        <Label Content="{StaticResource strName}"/>
+        <TextBox Name="tbEditName"/>
+      </StackPanel>
+      <StackPanel>
+        <Label Content="{StaticResource strDepartment}"/>
+        <ComboBox
+              Name="cbDepartments"
+              VerticalAlignment="Top"
+              SelectedIndex="0"/>
+      </StackPanel>
+    </StackPanel>
+
+
+    
+  </Grid>
+</Window>
