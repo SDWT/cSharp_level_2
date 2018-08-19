@@ -64,6 +64,16 @@ namespace EmployeeList
       return (index >= Departments.Count || index < 0) ? Department.DefaultDepartment : Departments[index];
     }
 
+    /// <summary>
+    /// Изменить название отдела
+    /// </summary>
+    /// <param name="index">Номер отдела</param>
+    /// <param name="NewName">Новое имя отдела</param>
+    public static void EditDepartment(int index, string NewName)
+    {
+      Find(index).name = NewName;
+    }
+
     //public static void LoadDepartment(string data)
     //{
     //  new Department(data);
@@ -71,6 +81,8 @@ namespace EmployeeList
     #endregion
 
     #region Properties
+      private string name;
+
     /// <summary>
     /// Номер отдела
     /// </summary>
@@ -79,7 +91,7 @@ namespace EmployeeList
     /// <summary>
     /// Имя отдела
     /// </summary>
-    public string Name { get; }
+    public string Name { get => name; }
 
     #endregion
 
@@ -90,7 +102,7 @@ namespace EmployeeList
     /// <param name="Name">Имя отдела</param>
     private Department(string Name)
     {
-      this.Name = Name;
+      this.name = Name;
       this.Id = Departments.Count;
     }
 

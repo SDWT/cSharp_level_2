@@ -10,8 +10,9 @@
   <Window.Resources>
     <sys:String x:Key="strEditEmp">Редактирование сотрудника</sys:String>
     <sys:String x:Key="strAddEmp">Добавление сотрудника</sys:String>
-    <sys:String x:Key="strAddDept">Добавление отдела</sys:String>
+    <sys:String x:Key="strAddDept">Добавление/Редактирование отдела</sys:String>
     <sys:String x:Key="strName">Имя</sys:String>
+    <sys:String x:Key="strDeptName">Название</sys:String>
     <sys:String x:Key="strDepartment">Отдел</sys:String>
     <sys:String x:Key="strSave">Сохранить</sys:String>
     <sys:String x:Key="strAdd">Добавить</sys:String>
@@ -45,6 +46,7 @@
         <RowDefinition Height="30"/>
         <RowDefinition Height="30"/>
         <RowDefinition Height="30"/>
+        <RowDefinition Height="30"/>
         <RowDefinition Height="1*"/>
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
@@ -63,20 +65,28 @@
               SelectedIndex="0" Grid.Column="2" Grid.Row="3"/>
       <Button Name="saveEditEmp" Grid.Column="1" Grid.Row="4" Content="{StaticResource strSave}"/>
       <Button Name="resetEditEmp" Grid.Column="2" Grid.Row="4" Content="{StaticResource strReset}"/>
-      
-      <Label Content="{StaticResource strAddEmp}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="6" HorizontalContentAlignment="Center" FontSize="16"/>
 
+      <Label Content="{StaticResource strAddEmp}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="6" HorizontalContentAlignment="Center" FontSize="16"/>
+      <Label Content="{StaticResource strName}" Grid.Column="1" Grid.Row="7"/>
+      <TextBox Name="tbAddEmp" Grid.Column="2" Grid.Row="7"/>
+      <Label Content="{StaticResource strDepartment}" Grid.Column="1" Grid.Row="8"/>
+      <ComboBox
+              Name="cbDepartmentsAddEmp"
+              VerticalAlignment="Top"
+              SelectedIndex="0" Grid.Column="2" Grid.Row="8"/>
       <Button Name="saveAddEmp" Grid.Column="1" Grid.Row="9" Content="{StaticResource strAdd}"/>
       <Button Name="resetAddEmp" Grid.Column="2" Grid.Row="9" Content="{StaticResource strReset}"/>
       
       <Label Content="{StaticResource strAddDept}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="11" HorizontalContentAlignment="Center" FontSize="16"/>
-
-      <Button Name="saveAddDept" Grid.Column="1" Grid.Row="13" Content="{StaticResource strAdd}"/>
-      <Button Name="resetAddDept" Grid.Column="2" Grid.Row="13" Content="{StaticResource strReset}"/>
+      <Label Content="{StaticResource strDepartment}" Grid.Column="1" Grid.Row="12"/>
+      <ComboBox
+              Name="cbDepartmentsAddDept"
+              VerticalAlignment="Top"
+              SelectedIndex="0" Grid.Column="2" Grid.Row="12"/>
+      <Label Content="{StaticResource strDeptName}" Grid.Column="1" Grid.Row="13"/>
+      <TextBox Name="tbAddDept" Grid.Column="2" Grid.Row="13"/>
+      <Button Name="saveAddDept" Grid.Column="1" Grid.Row="14" Content="{StaticResource strSave}"/>
+      <Button Name="resetAddDept" Grid.Column="2" Grid.Row="14" Content="{StaticResource strReset}"/>
     </Grid>
-    
-
-
-    
   </Grid>
 </Window>
