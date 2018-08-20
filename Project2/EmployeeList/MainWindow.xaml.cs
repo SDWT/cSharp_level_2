@@ -20,6 +20,9 @@ namespace EmployeeList
   /// </summary>
   public partial class MainWindow : Window
   {
+    /// <summary>
+    /// Конструктор главного окна
+    /// </summary>
     public MainWindow()
     {
       string[] Departs =
@@ -69,7 +72,6 @@ namespace EmployeeList
       // Department Adding
       saveAddDept.Click += SaveAddDeptButton_Click;
       resetAddDept.Click += ResetAddDeptButton_Click;
-
     }
 
     /// <summary>
@@ -153,13 +155,15 @@ namespace EmployeeList
     /// <param name="e"></param>
     private void lbEmployee_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-      if (lbEmployee.SelectedIndex > -1)
+      int id = lbEmployee.SelectedIndex;
+      if (id > -1)
       {
-
-        cbDepartments.SelectedIndex = Employee.Employees[lbEmployee.SelectedIndex].DepartmentId;
-        lEditName.Content = Employee.Employees[lbEmployee.SelectedIndex].Name;
+        cbDepartments.SelectedIndex = Employee.Employees[id].DepartmentId;
+        lEditName.Content = Employee.Employees[id].Name;
 
         cbDepartments.IsEnabled = true;
+        // Костыль
+        lbEmployee.SelectedIndex = id;
       }
     }
 
@@ -170,13 +174,16 @@ namespace EmployeeList
     /// <param name="e"></param>
     private void SaveEditEmpButton_Click(object sender, RoutedEventArgs e)
     {
+      int id = lbEmployee.SelectedIndex;
       if (lbEmployee.SelectedIndex > -1)
       {
-        Employee.Employees[lbEmployee.SelectedIndex].DepartmentId = cbDepartments.SelectedIndex;
+        Employee.Employees[id].DepartmentId = cbDepartments.SelectedIndex;
 
         // Костыль
         lbEmployee.ItemsSource = new List<int>();
         lbEmployee.ItemsSource = Employee.Employees;
+        // Костыль
+        lbEmployee.SelectedIndex = id;
       }
       
     }
@@ -188,8 +195,27 @@ namespace EmployeeList
     /// <param name="e"></param>
     private void ResetEditEmpButton_Click(object sender, RoutedEventArgs e)
     {
-      cbDepartments.SelectedIndex = Employee.Employees[lbEmployee.SelectedIndex].DepartmentId;
-      lEditName.Content = Employee.Employees[lbEmployee.SelectedIndex].Name;
+      int id = lbEmployee.SelectedIndex;
+      if (id > -1)
+      {
+        cbDepartments.SelectedIndex = Employee.Employees[lbEmployee.SelectedIndex].DepartmentId;
+        lEditName.Content = Employee.Employees[lbEmployee.SelectedIndex].Name;
+        // Костыль
+        lbEmployee.SelectedIndex = id;
+      }
+    }
+
+    /// <summary>
+    /// Обработчик нажатия на клавиши клавиатуры
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void Window_KeyDown(object sender, KeyEventArgs e)
+    {
+      if (e.Key == Key.Escape)
+      {
+        MainWindowApplication.Close();
+      }
     }
   }
 }

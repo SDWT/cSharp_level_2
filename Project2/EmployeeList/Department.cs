@@ -69,9 +69,15 @@ namespace EmployeeList
     /// </summary>
     /// <param name="index">Номер отдела</param>
     /// <param name="NewName">Новое имя отдела</param>
-    public static void EditDepartment(int index, string NewName)
+    /// <returns></returns>
+    public static bool EditDepartment(int index, string NewName)
     {
-      Find(index).name = NewName;
+      if (Find(NewName) == DefaultDepartment)
+      {
+        Find(index).name = NewName;
+        return true;
+      }
+      return false;
     }
 
     //public static void LoadDepartment(string data)

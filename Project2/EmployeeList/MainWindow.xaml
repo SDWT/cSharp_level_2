@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:EmployeeList"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800" MinWidth="500" MinHeight="500">
+        Title="MainWindow" Height="500" Width="800" MinWidth="500" MinHeight="500" KeyDown="Window_KeyDown" Name="MainWindowApplication">
   <Window.Resources>
     <sys:String x:Key="strEditEmp">Редактирование сотрудника</sys:String>
     <sys:String x:Key="strAddEmp">Добавление сотрудника</sys:String>
