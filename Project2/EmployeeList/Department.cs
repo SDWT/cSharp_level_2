@@ -33,7 +33,7 @@ namespace EmployeeList
         if (this.name != value)
         {
           this.name = value;
-          this.NotifyPropertyChanged("Name");
+          this.NotifyPropertyChanged(nameof(Name));
         }
       }
     }

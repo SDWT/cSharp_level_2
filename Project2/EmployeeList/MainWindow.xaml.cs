@@ -48,31 +48,11 @@ namespace EmployeeList
       
       InitializeComponent();
 
-      //cbDepartments.DataContext = Model.Departments;
-      //cbDepartmentsAddDept.DataContext = Model.Departments;
-      //cbDepartmentsAddEmp.DataContext = Model.Departments;
-
       cbDepartments.ItemsSource = Model.Departments;
       cbDepartmentsAddDept.ItemsSource = Model.Departments;
       cbDepartmentsAddEmp.ItemsSource = Model.Departments;
 
-      //cbDepartments.SetBinding()
-
-      //if (lvEmployee.SelectedIndex == -1)
-      //{
-      //  cbDepartments.IsEnabled = true;
-      //}
-
-      //cbDepartments.IsEditable = true;
-
       lvEmployee.ItemsSource = Model.Employees;
-      //lbEmployee.ItemsSource = Model.Employees;
-      //lbEmployee.SelectionChanged += lbEmployee_SelectionChanged;
-      //cbDepartments.ItemsSource = Model.Departments;
-      //cbDepartmentsAddEmp.ItemsSource = Model.Departments;
-      //cbDepartmentsAddEmp.SelectedIndex = -1;
-      //cbDepartmentsAddDept.ItemsSource = Model.Departments;
-      //cbDepartmentsAddDept.SelectedIndex = -1;
 
       // Employee Editor
       saveEditEmp.Click += SaveEditEmpButton_Click;
@@ -115,19 +95,10 @@ namespace EmployeeList
         Model.AddDepartment(tbAddDept.Text);
 
       // Костыль
-      //cbDepartments.ItemsSource = new List<int>();
-      //cbDepartmentsAddDept.ItemsSource = new List<int>();
-      //cbDepartmentsAddEmp.ItemsSource = new List<int>();
-
-      //cbDepartments.ItemsSource = Model.Departments;
-      //cbDepartmentsAddDept.ItemsSource = Model.Departments;
-      //cbDepartmentsAddEmp.ItemsSource = Model.Departments;
-
-      // Костыль
       var answer = MessageBox.Show("Если вы хотите перезагрузить данные работников, чтобы отобразить изменения Департаментов, то нажмите Ок.", "Перезагрузка данных", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
       if (answer.HasFlag(MessageBoxResult.OK))
       {
-        lvEmployee.ItemsSource = new List<int>();
+        lvEmployee.ItemsSource = null;
         lvEmployee.ItemsSource = Model.Employees;
       }
 
@@ -158,8 +129,6 @@ namespace EmployeeList
         Model.AddEmployee(tbAddEmp.Text, index, -1); // Change Salary
 
         // Костыль
-        //lvEmployee.ItemsSource = new List<int>();
-        //lvEmployee.ItemsSource = Model.Employees;
         cbDepartmentsAddEmp.SelectedIndex = -1;
       }
       
@@ -184,19 +153,6 @@ namespace EmployeeList
       }
     }
 
-    //private void lbEmployee_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    //{
-    //  int id = lbEmployee.SelectedIndex;
-    //  if (id > -1)
-    //  {
-    //    cbDepartments.SelectedIndex = Model.Employees[id].DepartmentId;
-    //    lEditName.Content = Model.Employees[id].Name;
-
-    //    cbDepartments.IsEnabled = true;
-    //    // Костыль
-    //    lbEmployee.SelectedIndex = id;
-    //  }
-    //}
 
     /// <summary>
     /// Обработчик нажатия на кнопку сохранить в редактировании сотрудника
@@ -210,9 +166,6 @@ namespace EmployeeList
       {
         Model.Employees[id].DepartmentId = cbDepartments.SelectedIndex;
         
-        // Костыль
-        //lvEmployee.ItemsSource = new List<int>();
-        //lvEmployee.ItemsSource = Model.Employees;
         // Костыль
         lvEmployee.SelectedIndex = id;
       }

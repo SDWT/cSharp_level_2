@@ -41,7 +41,7 @@ namespace EmployeeList
         if (this.did != value)
         {
           this.did = value;
-          this.NotifyPropertyChanged("DepartmentId");
+          this.NotifyPropertyChanged(nameof(DepartmentId));
         }
       }
     }
