@@ -123,8 +123,13 @@ namespace EmployeeList
       //cbDepartmentsAddDept.ItemsSource = Model.Departments;
       //cbDepartmentsAddEmp.ItemsSource = Model.Departments;
 
-      //lvEmployee.ItemsSource = new List<int>();
-      //lvEmployee.ItemsSource = Model.Employees;
+      // Костыль
+      var answer = MessageBox.Show("Если вы хотите перезагрузить данные работников, чтобы отобразить изменения Департаментов, то нажмите Ок.", "Перезагрузка данных", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+      if (answer.HasFlag(MessageBoxResult.OK))
+      {
+        lvEmployee.ItemsSource = new List<int>();
+        lvEmployee.ItemsSource = Model.Employees;
+      }
 
       cbDepartmentsAddDept.SelectedIndex = -1;
     }
