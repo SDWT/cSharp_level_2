@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:EmployeeList"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800" MinWidth="500" MinHeight="500" KeyDown="Window_KeyDown" Name="MainWindowApplication">
+        Title="MainWindow" Height="500" Width="800" MinWidth="800" MinHeight="500" KeyDown="Window_KeyDown" Name="MainWindowApplication">
   <Window.Resources>
     <sys:String x:Key="strEditEmp">Редактирование сотрудника</sys:String>
     <sys:String x:Key="strAddEmp">Добавление сотрудника</sys:String>
@@ -17,19 +17,39 @@
     <sys:String x:Key="strSave">Сохранить</sys:String>
     <sys:String x:Key="strAdd">Добавить</sys:String>
     <sys:String x:Key="strReset">Отменить</sys:String>
-    
+    <local:DepIdToDepNameConverter x:Key="DepIdToDepNameConverter"></local:DepIdToDepNameConverter>
   </Window.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="1*"/>
-      <ColumnDefinition Width="2*"/>
+      <ColumnDefinition Width="4*"/>
+      <ColumnDefinition Width="3*"/>
     </Grid.ColumnDefinitions>
-    <ListBox Grid.Column="0"
+    <!--<ListBox Grid.Column="0"
              Name="lbEmployee" 
              SelectionMode="Single"
-             SelectionChanged="lbEmployee_SelectionChanged"
+             SelectionChanged="lvEmployee_SelectionChanged"
              VerticalAlignment="Top"
-             Height="250"/>
+             Height="300" Margin="0,159,0,0"
+             DisplayMemberPath="DepartmentId"/>-->
+    <ListView Grid.Column="0"
+             Name="lvEmployee" 
+             SelectionMode="Single"
+             SelectionChanged="lvEmployee_SelectionChanged"
+             VerticalAlignment="Top">
+      <ListView.View>
+        <GridView>
+          <GridViewColumn Header="Имя"
+                          Width="100"
+                          DisplayMemberBinding="{Binding Name}"/>
+          <GridViewColumn Header="Возраст"
+                          Width="100"
+                          DisplayMemberBinding="{Binding DepartmentId, Converter={StaticResource DepIdToDepNameConverter}}"/>
+          <GridViewColumn Header="Зарплата"
+                          Width="100"
+                          DisplayMemberBinding="{Binding Salary}"/>
+        </GridView>
+      </ListView.View>
+    </ListView>
     <Grid Grid.Column="1">
       <Grid.RowDefinitions>
         <RowDefinition Height="10"/>
@@ -62,7 +82,8 @@
       <ComboBox
               Name="cbDepartments"
               VerticalAlignment="Top"
-              SelectedIndex="0" Grid.Column="2" Grid.Row="3"/>
+              SelectedIndex="0" Grid.Column="2" Grid.Row="3"
+              DisplayMemberPath="Name"/>
       <Button Name="saveEditEmp" Grid.Column="1" Grid.Row="4" Content="{StaticResource strSave}"/>
       <Button Name="resetEditEmp" Grid.Column="2" Grid.Row="4" Content="{StaticResource strReset}"/>
 
@@ -73,7 +94,8 @@
       <ComboBox
               Name="cbDepartmentsAddEmp"
               VerticalAlignment="Top"
-              SelectedIndex="0" Grid.Column="2" Grid.Row="8"/>
+              SelectedIndex="0" Grid.Column="2" Grid.Row="8"
+              DisplayMemberPath="Name"/>
       <Button Name="saveAddEmp" Grid.Column="1" Grid.Row="9" Content="{StaticResource strAdd}"/>
       <Button Name="resetAddEmp" Grid.Column="2" Grid.Row="9" Content="{StaticResource strReset}"/>
       
@@ -82,7 +104,8 @@
       <ComboBox
               Name="cbDepartmentsAddDept"
               VerticalAlignment="Top"
-              SelectedIndex="0" Grid.Column="2" Grid.Row="12"/>
+              SelectedIndex="0" Grid.Column="2" Grid.Row="12"
+              DisplayMemberPath="Name"/>
       <Label Content="{StaticResource strDeptName}" Grid.Column="1" Grid.Row="13"/>
       <TextBox Name="tbAddDept" Grid.Column="2" Grid.Row="13"/>
       <Button Name="saveAddDept" Grid.Column="1" Grid.Row="14" Content="{StaticResource strSave}"/>

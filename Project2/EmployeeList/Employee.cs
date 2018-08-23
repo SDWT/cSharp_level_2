@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,27 +10,8 @@ namespace EmployeeList
   /// <summary>
   /// Класс сотрудника
   /// </summary>
-  public class Employee
+  public class Employee : INotifyPropertyChanged
   {
-    #region Static Properties
-    /// <summary>
-    /// Список сотрудников
-    /// </summary>
-    public static ObservableCollection<Employee> Employees { get; } = new ObservableCollection<Employee>();
-    #endregion
-
-    #region Static Methods
-    /// <summary>
-    /// Метод добавления сотрудника
-    /// </summary>
-    /// <param name="Name">Имя</param>
-    /// <param name="Department">Отдел</param>
-    public static void AddEmployee(string Name, Department Department)
-    {
-      Employees.Add(new Employee(Name, Department));
-    }
-    #endregion
-
     #region Properties
     /// <summary>
     /// Номер сотрудника
@@ -43,9 +24,32 @@ namespace EmployeeList
     public string Name { get; }
 
     /// <summary>
+    /// Зарплата
+    /// </summary>
+    public int Salary { get; }
+
+    private int did;
+
+    /// <summary>
     /// Номер отдела
     /// </summary>
-    public int DepartmentId { get; set; }
+    public int DepartmentId
+    {
+      get => did;
+      set
+      {
+        if (this.did != value)
+        {
+          this.did = value;
+          this.NotifyPropertyChanged("DepartmentId");
+        }
+      }
+    }
+
+    /// <summary>
+    /// Номер отдела
+    /// </summary>
+    public string Department { get => Model.FindDepartment(DepartmentId).Name; } // Change to converter
     #endregion
 
     #region Methods
@@ -54,21 +58,28 @@ namespace EmployeeList
     /// </summary>
     /// <param name="Name">Имя</param>
     /// <param name="Department">Отдел</param>
-    private Employee(string Name, Department Department) 
+    public Employee(string Name, int Id, Department Department, int Salary) 
     {
       this.Name = Name;
-      this.Id = Employees.Count;
+      this.Id = Id;
       this.DepartmentId = Department.Id;
+      this.Salary = Salary;
     }
 
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public void NotifyPropertyChanged(string propName)
+    {
+      this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+    }
     /// <summary>
     /// Переопределение метода преобразования сотрудника в строку
     /// </summary>
     /// <returns>Строка</returns>
-    public override string ToString()
-    {
-      return $"{Name} - {Department.Find(DepartmentId)}";
-    }
+    //public override string ToString()
+    //{
+    //  return $"{Name} - {Department.Find(DepartmentId)}";
+    //}
     #endregion
   }
 }

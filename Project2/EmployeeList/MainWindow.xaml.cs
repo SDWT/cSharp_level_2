@@ -39,27 +39,40 @@ namespace EmployeeList
 
       foreach (var dep in Departs)
       {
-        Department.AddDepartment(dep);
+        Model.AddDepartment(dep);
       }
-      Employee.AddEmployee("Dima", Department.Find("Probation"));
-      Employee.AddEmployee("Kid", Department.Find("Menegment"));
-      Employee.AddEmployee("Vs", Department.Find("Bookkeeping"));
-      Employee.AddEmployee("Cat", Department.Find("Design"));
+      Model.AddEmployee("Dima", "Probation", 10);
+      Model.AddEmployee("Kid", "Menegment", 200);
+      Model.AddEmployee("Vs", "Bookkeeping", 500);
+      Model.AddEmployee("Cat", "Design", 1000);
       
       InitializeComponent();
 
-      //if (lbEmployee.SelectedIndex == -1)
+      //cbDepartments.DataContext = Model.Departments;
+      //cbDepartmentsAddDept.DataContext = Model.Departments;
+      //cbDepartmentsAddEmp.DataContext = Model.Departments;
+
+      cbDepartments.ItemsSource = Model.Departments;
+      cbDepartmentsAddDept.ItemsSource = Model.Departments;
+      cbDepartmentsAddEmp.ItemsSource = Model.Departments;
+
+      //cbDepartments.SetBinding()
+
+      //if (lvEmployee.SelectedIndex == -1)
       //{
       //  cbDepartments.IsEnabled = true;
       //}
 
       //cbDepartments.IsEditable = true;
-      lbEmployee.ItemsSource = Employee.Employees;
-      cbDepartments.ItemsSource = Department.Departments;
-      cbDepartmentsAddEmp.ItemsSource = Department.Departments;
-      cbDepartmentsAddEmp.SelectedIndex = -1;
-      cbDepartmentsAddDept.ItemsSource = Department.Departments;
-      cbDepartmentsAddDept.SelectedIndex = -1;
+
+      lvEmployee.ItemsSource = Model.Employees;
+      //lbEmployee.ItemsSource = Model.Employees;
+      //lbEmployee.SelectionChanged += lbEmployee_SelectionChanged;
+      //cbDepartments.ItemsSource = Model.Departments;
+      //cbDepartmentsAddEmp.ItemsSource = Model.Departments;
+      //cbDepartmentsAddEmp.SelectedIndex = -1;
+      //cbDepartmentsAddDept.ItemsSource = Model.Departments;
+      //cbDepartmentsAddDept.SelectedIndex = -1;
 
       // Employee Editor
       saveEditEmp.Click += SaveEditEmpButton_Click;
@@ -95,26 +108,25 @@ namespace EmployeeList
       int index = cbDepartmentsAddDept.SelectedIndex;
       if (index > 0)
       {
-        Department.EditDepartment(index, tbAddDept.Text);
+        Model.EditDepartment(index, tbAddDept.Text);
 
       }
       else
-        Department.AddDepartment(tbAddDept.Text);
+        Model.AddDepartment(tbAddDept.Text);
 
       // Костыль
-      cbDepartments.ItemsSource = new List<int>();
-      cbDepartmentsAddDept.ItemsSource = new List<int>();
-      cbDepartmentsAddEmp.ItemsSource = new List<int>();
+      //cbDepartments.ItemsSource = new List<int>();
+      //cbDepartmentsAddDept.ItemsSource = new List<int>();
+      //cbDepartmentsAddEmp.ItemsSource = new List<int>();
 
-      cbDepartments.ItemsSource = Department.Departments;
-      cbDepartmentsAddDept.ItemsSource = Department.Departments;
-      cbDepartmentsAddEmp.ItemsSource = Department.Departments;
+      //cbDepartments.ItemsSource = Model.Departments;
+      //cbDepartmentsAddDept.ItemsSource = Model.Departments;
+      //cbDepartmentsAddEmp.ItemsSource = Model.Departments;
 
-      lbEmployee.ItemsSource = new List<int>();
-      lbEmployee.ItemsSource = Employee.Employees;
+      //lvEmployee.ItemsSource = new List<int>();
+      //lvEmployee.ItemsSource = Model.Employees;
 
       cbDepartmentsAddDept.SelectedIndex = -1;
-
     }
 
     /// <summary>
@@ -138,11 +150,11 @@ namespace EmployeeList
       int index = cbDepartmentsAddEmp.SelectedIndex;
       if (index > -1)
       {
-        Employee.AddEmployee(tbAddEmp.Text, Department.Find(index));
+        Model.AddEmployee(tbAddEmp.Text, index, -1); // Change Salary
 
         // Костыль
-        lbEmployee.ItemsSource = new List<int>();
-        lbEmployee.ItemsSource = Employee.Employees;
+        //lvEmployee.ItemsSource = new List<int>();
+        //lvEmployee.ItemsSource = Model.Employees;
         cbDepartmentsAddEmp.SelectedIndex = -1;
       }
       
@@ -153,19 +165,33 @@ namespace EmployeeList
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void lbEmployee_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void lvEmployee_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-      int id = lbEmployee.SelectedIndex;
+      int id = lvEmployee.SelectedIndex;
       if (id > -1)
       {
-        cbDepartments.SelectedIndex = Employee.Employees[id].DepartmentId;
-        lEditName.Content = Employee.Employees[id].Name;
+        cbDepartments.SelectedIndex = Model.Employees[id].DepartmentId;
+        lEditName.Content = Model.Employees[id].Name;
 
         cbDepartments.IsEnabled = true;
         // Костыль
-        lbEmployee.SelectedIndex = id;
+        lvEmployee.SelectedIndex = id;
       }
     }
+
+    //private void lbEmployee_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    //{
+    //  int id = lbEmployee.SelectedIndex;
+    //  if (id > -1)
+    //  {
+    //    cbDepartments.SelectedIndex = Model.Employees[id].DepartmentId;
+    //    lEditName.Content = Model.Employees[id].Name;
+
+    //    cbDepartments.IsEnabled = true;
+    //    // Костыль
+    //    lbEmployee.SelectedIndex = id;
+    //  }
+    //}
 
     /// <summary>
     /// Обработчик нажатия на кнопку сохранить в редактировании сотрудника
@@ -174,16 +200,16 @@ namespace EmployeeList
     /// <param name="e"></param>
     private void SaveEditEmpButton_Click(object sender, RoutedEventArgs e)
     {
-      int id = lbEmployee.SelectedIndex;
-      if (lbEmployee.SelectedIndex > -1)
+      int id = lvEmployee.SelectedIndex;
+      if (id > -1)
       {
-        Employee.Employees[id].DepartmentId = cbDepartments.SelectedIndex;
-
+        Model.Employees[id].DepartmentId = cbDepartments.SelectedIndex;
+        
         // Костыль
-        lbEmployee.ItemsSource = new List<int>();
-        lbEmployee.ItemsSource = Employee.Employees;
+        //lvEmployee.ItemsSource = new List<int>();
+        //lvEmployee.ItemsSource = Model.Employees;
         // Костыль
-        lbEmployee.SelectedIndex = id;
+        lvEmployee.SelectedIndex = id;
       }
       
     }
@@ -195,13 +221,13 @@ namespace EmployeeList
     /// <param name="e"></param>
     private void ResetEditEmpButton_Click(object sender, RoutedEventArgs e)
     {
-      int id = lbEmployee.SelectedIndex;
+      int id = lvEmployee.SelectedIndex;
       if (id > -1)
       {
-        cbDepartments.SelectedIndex = Employee.Employees[lbEmployee.SelectedIndex].DepartmentId;
-        lEditName.Content = Employee.Employees[lbEmployee.SelectedIndex].Name;
+        cbDepartments.SelectedIndex = Model.Employees[lvEmployee.SelectedIndex].DepartmentId;
+        lEditName.Content = Model.Employees[lvEmployee.SelectedIndex].Name;
         // Костыль
-        lbEmployee.SelectedIndex = id;
+        lvEmployee.SelectedIndex = id;
       }
     }
 
