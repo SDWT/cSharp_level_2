@@ -19,6 +19,31 @@ namespace EmployeeList
       Departments.Add(new Department("Undefined", Departments.Count));
     }
 
+    /// <summary>
+    /// Метод загрузки данных
+    /// </summary>
+    public static void LoadData()
+    {
+      string[] Departs =
+      {
+        "Probation",
+        "Menegment",
+        "Bookkeeping",
+        "Design",
+        "Programming",
+        "Testing",
+        "Economic"
+      };
+      foreach (var dep in Departs)
+      {
+        Model.AddDepartment(dep);
+      }
+      Model.AddEmployee("Dima", "Probation", 10);
+      Model.AddEmployee("Kid", "Menegment", 200);
+      Model.AddEmployee("Vs", "Bookkeeping", 500);
+      Model.AddEmployee("Cat", "Design", 1000);
+    }
+
     #endregion
 
     #region Department Properties
