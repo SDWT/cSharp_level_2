@@ -172,6 +172,15 @@ namespace EmployeeList
       return false;
     }
 
+
+    void UpdateDepartment(Department Dept)
+    {
+      if (Dept.Id < 1)
+        return;
+      // Тут должен быть код для изменеия департамента в БД
+
+    }
+
     //public static void LoadDepartment(string data)
     //{
     //  new Department(data);
@@ -207,5 +216,12 @@ namespace EmployeeList
     }
     #endregion
 
+    void UpdateEmployee(Employee Emp)
+    {
+      if (Emp.Id < 1)
+        return;
+      // Тут должен быть код для изменеия сотрудника в БД
+
+    }
   }
 }
