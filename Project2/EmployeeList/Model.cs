@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Configuration;
+using System.Data;
 
 namespace EmployeeList
 {
@@ -18,8 +20,6 @@ namespace EmployeeList
     static Model()
     {
       Departments.Add(new Department("Undefined", Departments.Count));
-
-      
 
       //LoadData();
 
@@ -60,24 +60,52 @@ namespace EmployeeList
     /// </summary>
     public static void LoadData()
     {
-      string[] Departs =
+      #region old data
+      //string[] Departs =
+      //{
+      //  "Probation",
+      //  "Menegment",
+      //  "Bookkeeping",
+      //  "Design",
+      //  "Programming",
+      //  "Testing",
+      //  "Economic"
+      //};
+      //foreach (var dep in Departs)
+      //{
+      //  Model.AddDepartment(dep);
+      //}
+      //Model.AddEmployee("Dima", "Probation", 10);
+      //Model.AddEmployee("Kid", "Menegment", 200);
+      //Model.AddEmployee("Vs", "Bookkeeping", 500);
+      //Model.AddEmployee("Cat", "Design", 1000);
+      #endregion
+
+
+      string strConnection = ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString();
+
+      SqlConnection connection = new SqlConnection(strConnection);
+      SqlDataAdapter adapter = new SqlDataAdapter();
+
+      connection.Open();
+      SqlCommand command = new SqlCommand("SELECT Name FROM Department", connection);
+      SqlDataReader dataReader = command.ExecuteReader();
+
+      while (dataReader.Read())
       {
-        "Probation",
-        "Menegment",
-        "Bookkeeping",
-        "Design",
-        "Programming",
-        "Testing",
-        "Economic"
-      };
-      foreach (var dep in Departs)
-      {
-        Model.AddDepartment(dep);
+        AddDepartment((string)dataReader["Name"]);
       }
-      Model.AddEmployee("Dima", "Probation", 10);
-      Model.AddEmployee("Kid", "Menegment", 200);
-      Model.AddEmployee("Vs", "Bookkeeping", 500);
-      Model.AddEmployee("Cat", "Design", 1000);
+      dataReader.Close();
+
+      command = new SqlCommand("SELECT * FROM Employee", connection);
+      dataReader = command.ExecuteReader();
+
+      while (dataReader.Read())
+      {
+        AddEmployee((string)dataReader["Name"], (int)dataReader["DepartmentId"], (int)dataReader["Salary"]);
+      }
+
+      return;
     }
 
     #endregion
