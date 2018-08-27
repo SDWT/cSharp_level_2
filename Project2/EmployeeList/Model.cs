@@ -19,10 +19,7 @@ namespace EmployeeList
     {
       Departments.Add(new Department("Undefined", Departments.Count));
 
-      string strConnection = @"Data Source=(localdb)\MSSQLLocalDB;
-        Initial Catalog=DEDB;
-        Integrated Security=True;
-        Pooling=False";
+      
 
       //LoadData();
 
