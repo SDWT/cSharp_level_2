@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace EmployeeList
 {
@@ -17,6 +18,44 @@ namespace EmployeeList
     static Model()
     {
       Departments.Add(new Department("Undefined", Departments.Count));
+
+      string strConnection = @"Data Source=(localdb)\MSSQLLocalDB;
+        Initial Catalog=DEDB;
+        Integrated Security=True;
+        Pooling=False";
+
+      //LoadData();
+
+      //foreach (var item in Employees)
+      //{
+      //  var sqlInto = string.Format(@"INSERT INTO Employee (Name, DepartmentId, Salary)
+      //                              VALUES (N'{0}', '{1}', '{2}')", item.Name, item.DepartmentId, item.Salary);
+
+      //  using (SqlConnection connection = new SqlConnection(strConnection))
+      //  {
+      //    connection.Open();
+      //    SqlCommand command = new SqlCommand(sqlInto, connection);
+      //    command.ExecuteNonQuery();
+      //  }
+      //}
+
+      //foreach (var item in Departments)
+      //{
+      //  var sqlInto = string.Format(@"INSERT INTO Department (Name)
+      //                              VALUES (N'{0}')", item.Name);
+
+      //  using (SqlConnection connection = new SqlConnection(strConnection))
+      //  {
+      //    connection.Open();
+      //    SqlCommand command = new SqlCommand(sqlInto, connection);
+      //    command.ExecuteNonQuery();
+      //  }
+      //}
+
+
+      //Employees.Clear();
+      //Departments.Clear();
+      //Departments.Add(new Department("Undefined", Departments.Count));
     }
 
     /// <summary>
